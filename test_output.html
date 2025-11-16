@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ds-markdown Render</title>
+    <style>
+        :root {
+            --ds-rgb-neutral-50: 250 250 250;
+            --ds-rgb-neutral-100: 245 245 245;
+            --ds-rgb-neutral-150: 237 237 237;
+            --ds-rgb-neutral-200: 229 229 229;
+            --ds-rgb-neutral-250: 220 220 220;
+            --ds-rgb-neutral-300: 212 212 212;
+            --ds-rgb-neutral-350: 187 187 187;
+            --ds-rgb-neutral-400: 163 163 163;
+            --ds-rgb-neutral-450: 139 139 139;
+            --ds-rgb-neutral-500: 115 115 115;
+            --ds-rgb-neutral-550: 98 98 98;
+            --ds-rgb-neutral-600: 82 82 82;
+            --ds-rgb-neutral-650: 73 73 73;
+            --ds-rgb-neutral-700: 64 64 64;
+            --ds-rgb-neutral-750: 51 51 51;
+            --ds-rgb-neutral-800: 38 38 38;
+            --ds-rgb-neutral-850: 30 30 30;
+            --ds-rgb-neutral-900: 23 23 23;
+            --ds-rgb-neutral-950: 10 10 10;
+
+            --ds-rgb-blue-500: 59 130 246;
+
+            --ds-rgb-label-1: var(--ds-rgb-neutral-700);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+
+        .ds-markdown {
+            --ds-font-family-code: Menlo, 'Roboto Mono', 'Courier New', Courier, monospace, 'Inter', sans-serif;
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                Segoe UI,
+                Roboto,
+                Noto Sans,
+                Ubuntu,
+                Cantarell,
+        }        .ds-markdown {
+            --ds-rgb-primary: var(--ds-rgb-blue-500);
+            --ds-rgb-label-1: var(--ds-rgb-neutral-700);
+            --ds-rgb-label-2: var(--ds-rgb-neutral-450);
+            --ds-rgb-label-3: var(--ds-rgb-neutral-400);
+            --dsr-border-1: rgb(var(--ds-rgb-neutral-350));
+            --dsr-border-2: rgb(var(--ds-rgb-neutral-200));
+
+            --ds-button-hover-color: rgba(0, 0, 0, 0.04);
+
+            --ds-md-inline-code-color: #ececec;
+            --dsr-bg: #ffffff;
+            --ds-thinking-border-color: #e5e5e5;
+        }
+
+        .ds-markdown.ds-markdown-dark {
+            --ds-rgb-label-1: var(--ds-rgb-neutral-50);
+            --ds-rgb-label-2: var(--ds-rgb-neutral-400);
+            --dsr-border-2: rgb(var(--ds-rgb-neutral-600));
+
+            --ds-button-hover-color: rgba(255, 255, 255, 0.04);
+
+            --ds-md-inline-code-color: #424242;
+            --dsr-bg: #292a2d;
+            --ds-thinking-border-color: #4e4e56;
+        }
+
+        .ds-markdown {
+            --ds-font-size-m: 14px;
+            --ds-font-size-xsp: 11px;
+            --ds-line-height-m: 25px;
+            --ds-transition-duration: 0.2s;
+            --ds-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+            --ds-rgba-transparent: 255 255 255 / 0;
+            --ds-rgb-link: var(--ds-rgb-primary);
+
+            --ds-input-height-l: 44px;
+            --ds-input-height-m: 34px;
+            --ds-input-height-s: 30px;
+            --ds-input-height-xs: 26px;
+        }
+
+        .ds-markdown.apple {
+            --ds-font-weight-strong: 500;
+        }
+
+        .ds-markdown {
+            --ds-md-zoom: 1.143;
+            --ds-md-font-size: calc(var(--ds-md-zoom) * var(--ds-font-size-m));
+            --ds-md-line-height: calc(var(--ds-md-zoom) * var(--ds-line-height-m));
+            font-size: var(--ds-md-font-size);
+            min-height: var(--ds-md-font-size);
+            line-height: var(--ds-md-line-height);
+            color: rgb(var(--ds-rgb-label-1));
+            background-color: var(--dsr-bg);
+        }
+
+        .ds-markdown img {
+            max-width: 100%;
+        }
+
+        .ds-markdown h1,
+        .ds-markdown h2,
+        .ds-markdown h3,
+        .ds-markdown h4,
+        .ds-markdown h5,
+        .ds-markdown h6 {
+            font-weight: var(--ds-font-weight-strong);
+            font-size: var(--ds-md-font-size);
+            line-height: var(--ds-md-line-height);
+            margin: calc(var(--ds-md-zoom) * 16px) 0 calc(var(--ds-md-zoom) * 12px) 0;
+        }
+
+        .ds-markdown h1 {
+            font-size: calc(var(--ds-md-zoom) * 24px);
+            line-height: 1.5;
+        }
+
+        .ds-markdown h2 {
+            font-size: calc(var(--ds-md-zoom) * 20px);
+            line-height: 1.5;
+        }
+
+        .ds-markdown h3 {
+            font-size: calc(var(--ds-md-zoom) * 16px);
+            line-height: 1.5;
+        }
+
+        .ds-markdown a:not(.ds-a) {
+            color: rgb(var(--ds-rgb-link));
+            transition: box-shadow var(--ds-transition-duration) var(--ds-ease-in-out);
+            border-radius: calc(var(--ds-md-zoom) * 6px);
+            border-left: 3px solid rgba(var(--ds-rgba-transparent));
+            border-right: 3px solid rgba(var(--ds-rgba-transparent));
+            border-top: 2px solid rgba(var(--ds-rgba-transparent));
+            border-bottom: 2px solid rgba(var(--ds-rgba-transparent));
+            margin-left: -3px;
+            margin-right: -3px;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .ds-markdown li > ul,
+        .ds-markdown li > ol {
+            margin-top: 4px;
+        }
+
+        .ds-markdown ul,
+        .ds-markdown ol {
+            margin: calc(var(--ds-md-zoom) * 12px) 0;
+            padding-left: calc(var(--ds-md-zoom) * 24px);
+        }
+
+        .ds-markdown li:not(:first-child) {
+            margin-top: 4px;
+        }
+
+        .ds-markdown li::marker {
+            line-height: var(--ds-md-line-height);
+            color: rgb(var(--ds-rgb-label-2));
+        }
+
+        .ds-markdown hr {
+            height: 1px;
+            margin: 32px 0;
+            background-color: var(--dsr-border-2);
+            border: none;
+            display: block;
+        }
+
+        .ds-markdown blockquote {
+            border-left: 2px solid rgb(var(--ds-rgb-label-3));
+            padding-left: calc(var(--ds-md-zoom) * 16px);
+            margin: 0;
+        }
+
+        .ds-markdown table {
+            border-collapse: collapse;
+        }
+
+        .ds-markdown th {
+            color: rgb(var(--ds-rgb-label-1));
+            padding: calc(var(--ds-md-zoom) * 6px) calc(var(--ds-md-zoom) * 12px);
+            border-bottom: 1px solid rgb(var(--ds-rgb-label-3));
+            border-top: 1px solid rgb(var(--ds-rgb-label-3));
+            font-weight: 600;
+        }
+
+        .ds-markdown th,
+        .ds-markdown td {
+            text-align: left;
+        }
+
+        .ds-markdown th:first-child {
+            padding-left: 0;
+        }
+
+        .ds-markdown td {
+            padding: calc(var(--ds-md-zoom) * 6px) calc(var(--ds-md-zoom) * 12px);
+            border-bottom: 1px solid rgb(var(--ds-rgb-label-3));
+        }
+
+        .ds-markdown td:first-child {
+            padding-left: 0;
+        }
+
+        .ds-markdown pre {
+            margin: calc(var(--ds-md-zoom) * 12px) 0;
+            font-family: var(--ds-font-family-code);
+            overflow: auto;
+        }
+
+        .ds-markdown code {
+            font-size: 0.875em;
+            font-weight: var(--ds-font-weight-strong);
+            font-family: var(--ds-font-family-code);
+            background-color: var(--ds-md-inline-code-color, #ececec);
+            border-radius: 4px;
+        }
+
+        .ds-markdown code:before {
+            margin-left: 4px;
+        }
+
+        .ds-markdown code:after {
+            margin-right: 4px;
+        }
+
+        ds-markdown-math {
+            text-align: center;
+            display: block;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .ds-markdown > * .ds-markdown-math {
+            margin: calc(var(--ds-md-zoom) * 12px) 0;
+        }
+
+        .ds-markdown li > .ds-markdown-paragraph {
+            margin: 4px 0;
+        }
+
+        .ds-markdown li > :first-child {
+            margin-top: 0;
+        }
+
+        .ds-markdown li > :last-child {
+            margin-bottom: 0;
+        }
+
+        .ds-markdown .ds-markdown-paragraph:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .ds-markdown > :first-child {
+            margin-top: 0 !important;
+        }
+
+        .markdown-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background-color: #2196f3;
+            margin-left: 2px;
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="markdown-container">
+        <div class="ds-markdown">
+            <div id="typing-content"></div>
+            <span class="typing-cursor"></span>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // 配置marked.js支持GFM
+        marked.setOptions({ gfm: true });
+
+        // 获取markdown内容
+        const rawMarkdown = "# \u6d4b\u8bd5\u6587\u6863\n\n\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5ds-video\u5e93\u7684markdown\u6587\u4ef6\u3002\n\n## \u7279\u6027\n\n- \u652f\u6301\u57fa\u672c\u7684markdown\u8bed\u6cd5\n- \u652f\u6301\u4ee3\u7801\u5757\n- \u652f\u6301\u8868\u683c\n- \u652f\u6301\u5217\u8868\n\n## \u4ee3\u7801\u793a\u4f8b\n\n```python\nprint(\"Hello, World!\")\n```\n\n## \u8868\u683c\u793a\u4f8b\n\n| \u52171 | \u52172 | \u52173 |\n|-----|-----|-----|\n| A   | B   | C   |\n| D   | E   | F   |\n\n## \u5217\u8868\u793a\u4f8b\n\n- \u9879\u76ee1\n- \u9879\u76ee2\n- \u9879\u76ee3\n  - \u5b50\u9879\u76ee3.1\n  - \u5b50\u9879\u76ee3.2";
+        const typingElement = document.getElementById('typing-content');
+        let index = 0;
+        let typingSpeed = 30;
+
+        function type() {
+            if (index < rawMarkdown.length) {
+                // 获取当前输入的内容部分
+                const currentContent = rawMarkdown.substring(0, index + 1);
+                // 使用marked.js渲染为HTML
+                const renderedHTML = marked.parse(currentContent);
+                typingElement.innerHTML = renderedHTML;
+                index++;
+                setTimeout(type, typingSpeed);
+            } else {
+                // 打字完成后隐藏光标
+                document.querySelector('.typing-cursor').style.display = 'none';
+            }
+        }
+
+        // 开始打字效果
+        setTimeout(type, 500);
+    </script>
+</body>
+</html>
