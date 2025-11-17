@@ -11,7 +11,10 @@ A Python library to convert markdown content to video using ds-markdown and ffmp
 
 ## Demo 
 
-https://github.com/baifengbai/ds_video_release/blob/master/output_with_typing_final.mp4
+<video controls width="600">
+  <source src="output_with_typing_final.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## Installation
 
