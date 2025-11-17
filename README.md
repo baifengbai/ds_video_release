@@ -9,6 +9,10 @@ A Python library to convert markdown content to video using ds-markdown and ffmp
 - Customizable video settings
 - Command-line interface for easy use
 
+## Demo 
+
+https://github.com/baifengbai/ds_video_release/blob/master/output_with_typing_final.mp4
+
 ## Installation
 
 ### Prerequisites
